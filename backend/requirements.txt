@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+transformers
+torch
+sqlalchemy
+psycopg2-binary
+python-multipart
+PyPDF2
