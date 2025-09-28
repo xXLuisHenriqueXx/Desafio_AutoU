@@ -28,6 +28,8 @@ app.use("/api", async (req, res) => {
       body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
     });
 
+    console.log(`Response: ${response}`);
+
     const data = await response.text();
     res.status(response.status).send(data);
   } catch (err) {
