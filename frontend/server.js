@@ -23,7 +23,7 @@ app.use("/api", async (req, res) => {
         "Content-Type": "application/json",
         ...req.headers,
       },
-      body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
+      body: JSON.stringify(req.body),
     });
 
     const data = await response.json();
