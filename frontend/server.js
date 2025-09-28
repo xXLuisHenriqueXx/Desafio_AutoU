@@ -17,8 +17,6 @@ app.use("/api", async (req, res) => {
     const backendUrl = process.env.BACKEND_URL;
     const target = `${backendUrl}${req.originalUrl}`;
 
-    console.log(`Proxying ${req.method} ${req.originalUrl} to ${target}`);
-
     const response = await fetch(target, {
       method: req.method,
       headers: {
@@ -28,9 +26,9 @@ app.use("/api", async (req, res) => {
       body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
     });
 
-    console.log(`Response: ${response.json()}`);
+    const data = await response.json();
+    console.log(data);
 
-    const data = await response.text();
     res.status(response.status).send(data);
   } catch (err) {
     console.error("Erro no proxy:", err);
