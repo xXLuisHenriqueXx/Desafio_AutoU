@@ -17,17 +17,19 @@ app.use("/api", async (req, res) => {
     const backendUrl = process.env.BACKEND_URL;
     const target = `${backendUrl}${req.originalUrl}`;
 
-    const response = await fetch(target, {
+    const fetchOptions = {
       method: req.method,
       headers: {
         "Content-Type": "application/json",
         ...req.headers,
       },
-      body: JSON.stringify(req.body),
-    });
+    };
 
-    const data = await response.json();
-    console.log(data);
+    if (req.method !== "GET") {
+      fetchOptions.body = JSON.stringify(req.body);
+    }
+
+    const response = await fetch(target, fetchOptions);
 
     res.status(response.status).send(data);
   } catch (err) {
