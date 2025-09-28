@@ -12,17 +12,19 @@ app.use(express.static(path.join(__dirname, "dist")));
 
 app.use("/api", (req, res) => {
   const backendUrl = process.env.BACKEND_URL;
-  const target = backendUrl + req.originalUrl.replace("/api", "");
+  const target = backendUrl + req.originalUrl;
   fetch(target, {
     method: req.method,
-    headers: req.headers,
-    body: req.method !== "GET" ? req.body : undefined,
-  }).then(async r => {
-    const data = await r.text();
-    res.status(r.status).send(data);
-  }).catch(err => {
-    res.status(502).json({ error: err.message });
-  });
+    headers: { "Content-Type": "application/json" },
+    body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
+  })
+    .then(async (r) => {
+      const data = await r.text();
+      res.status(r.status).send(data);
+    })
+    .catch((err) => {
+      res.status(502).json({ error: err.message });
+    });
 });
 
 
