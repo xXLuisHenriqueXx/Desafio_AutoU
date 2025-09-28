@@ -21,7 +21,7 @@ app.add_middleware(
 class TextInput(BaseModel):
     text: str
 
-@app.post("/process_email/file")
+@app.post("/api/process_email/file")
 async def process_email_file(file: UploadFile = File(...)):
     if file.filename.endswith(".txt"):
         content = await file.read()
@@ -40,7 +40,7 @@ async def process_email_file(file: UploadFile = File(...)):
     return {"categoria": category, "resposta": response}
 
 
-@app.post("/process_email/text")
+@app.post("/api/process_email/text")
 async def process_email_text(body: TextInput):
     email_text = body.text
     category = classify_email(email_text)
