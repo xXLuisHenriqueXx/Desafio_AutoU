@@ -6,6 +6,9 @@ import {
   resultContainer,
   category,
   result,
+  loader,
+  classifyText,
+  classifyButton,
 } from "./dom";
 
 export function setupForm() {
@@ -28,6 +31,11 @@ async function handleFormSubmit(event: Event) {
     formData.append("file", file);
 
     try {
+      loader.classList.remove("hidden");
+      loader.classList.add("flex");
+      classifyText.classList.add("hidden");
+      classifyButton.disabled = true;
+
       const resp = await fetch("http://localhost:8000/process_email/file", {
         method: "POST",
         body: formData,
@@ -39,6 +47,11 @@ async function handleFormSubmit(event: Event) {
       resultContainer.classList.add("flex");
       category.textContent = data.categoria;
       result.textContent = data.resultado;
+
+      loader.classList.remove("flex");
+      loader.classList.add("hidden");
+      classifyText.classList.remove("hidden");
+      classifyButton.disabled = false;
     } catch (err) {
       console.error("Erro no upload:", err);
     }
@@ -50,6 +63,11 @@ async function handleFormSubmit(event: Event) {
     }
 
     try {
+      classifyText.classList.add("hidden");
+      loader.classList.remove("hidden");
+      loader.classList.add("flex");
+      classifyButton.disabled = true;
+
       const resp = await fetch("http://localhost:8000/process_email/text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,6 +80,11 @@ async function handleFormSubmit(event: Event) {
       resultContainer.classList.add("flex");
       category.textContent = data.categoria;
       result.textContent = data.resposta;
+
+      loader.classList.remove("flex");
+      loader.classList.add("hidden");
+      classifyText.classList.remove("hidden");
+      classifyButton.disabled = false;
     } catch (err) {
       console.error("Erro no envio do texto:", err);
     }

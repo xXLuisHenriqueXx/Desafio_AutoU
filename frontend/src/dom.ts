@@ -12,3 +12,10 @@ export const category = document.getElementById(
   "category"
 ) as HTMLHeadingElement;
 export const result = document.getElementById("result") as HTMLParagraphElement;
+export const loader = document.getElementById("loader") as HTMLElement;
+export const classifyButton = document.getElementById(
+  "classifyButton"
+) as HTMLButtonElement;
+export const classifyText = document.getElementById(
+  "classifyText"
+) as HTMLSpanElement;
