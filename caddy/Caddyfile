@@ -5,8 +5,8 @@
 
 :80 {
     handle /* {
-        reverse_proxy http://desafio_autou.railway.internal:8000
+        reverse_proxy http://webapp-backend.railway.internal:8000
     }
 
-    reverse_proxy http://optimistic-passion.railway.internal:3000
+    reverse_proxy http://webapp-frontend.railway.internal:3000
 }
