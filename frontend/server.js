@@ -31,6 +31,9 @@ app.use("/api", async (req, res) => {
 
     const response = await fetch(target, fetchOptions);
 
+    const data = await response.json();
+    console.log(data);
+
     res.status(response.status).send(data);
   } catch (err) {
     console.error("Erro no proxy:", err);
