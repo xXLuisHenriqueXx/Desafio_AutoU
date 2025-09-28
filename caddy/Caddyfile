@@ -4,7 +4,7 @@
 }
 
 :80 {
-    handle /* {
+    handle /api/* {
         reverse_proxy http://webapp-backend.railway.internal:8000
     }
 
