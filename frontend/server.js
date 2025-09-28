@@ -17,6 +17,8 @@ app.use("/api", async (req, res) => {
     const backendUrl = process.env.BACKEND_URL;
     const target = `http://${backendUrl}${req.originalUrl}`;
 
+    console.log(`Proxying ${req.method} ${req.originalUrl} to ${target}`);
+
     const response = await fetch(target, {
       method: req.method,
       headers: {
