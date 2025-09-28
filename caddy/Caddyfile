@@ -8,5 +8,7 @@
         reverse_proxy http://webapp-backend.railway.internal:8000
     }
 
-    reverse_proxy http://webapp-frontend.railway.internal:3000
+    handle {
+        reverse_proxy http://webapp-frontend.railway.internal:3000
+    }
 }
