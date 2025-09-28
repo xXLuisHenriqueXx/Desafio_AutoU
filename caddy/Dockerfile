@@ -4,6 +4,6 @@ WORKDIR /etc/caddy
 
 COPY Caddyfile /etc/caddy/Caddyfile
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

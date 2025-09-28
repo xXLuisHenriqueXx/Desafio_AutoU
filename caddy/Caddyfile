@@ -3,7 +3,7 @@
     persist_config off
 }
 
-:80 {
+:8080 {
     handle /api/* {
         reverse_proxy http://webapp-backend-email.railway.internal:8000
     }
