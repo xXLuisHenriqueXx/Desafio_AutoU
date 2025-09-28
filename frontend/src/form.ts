@@ -46,7 +46,7 @@ async function handleFormSubmit(event: Event) {
       resultContainer.classList.remove("hidden");
       resultContainer.classList.add("flex");
       category.textContent = data.categoria;
-      result.textContent = data.resultado;
+      result.textContent = data.resposta;
 
       loader.classList.remove("flex");
       loader.classList.add("hidden");
