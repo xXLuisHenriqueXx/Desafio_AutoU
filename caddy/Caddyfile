@@ -1,0 +1,12 @@
+{
+    admin off
+    persist_config off
+}
+
+:80 {
+    handle /api/* {
+        reverse_proxy http://webapp-backend-email.railway.internal:8000
+    }
+
+    reverse_proxy http://webapp-frontend-email.railway.internal:3000
+}
