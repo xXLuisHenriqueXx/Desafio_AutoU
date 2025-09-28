@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "dist")));
 app.use("/api", async (req, res) => {
   try {
     const backendUrl = process.env.BACKEND_URL;
-    const target = backendUrl + req.originalUrl;
+    const target = `http://${backendUrl}${req.originalUrl}`;
 
     const response = await fetch(target, {
       method: req.method,
