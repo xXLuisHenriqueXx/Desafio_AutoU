@@ -1,56 +1,49 @@
-from fastapi import FastAPI, UploadFile, Form, Depends
+from fastapi import FastAPI, UploadFile, Form, File
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
-from app.classifier import classify_email
-from app.responder import suggest_response
-from app.database import SessionLocal, engine, Base
-from app.models import Email
+from classifier import classify_email
+from responder import suggest_response
+from pydantic import BaseModel
 import PyPDF2
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+origins = ["*"]
 
-@app.post("/process_email/")
-async def process_email(
-    file: UploadFile = None,
-    text: str = Form(None),
-    db: Session = Depends(get_db)
-):
-    email_text = None
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True, 
+    allow_methods=["*"], 
+    allow_headers=["*"],
+)
 
-    if file:
-        if file.filename.endswith(".txt"):
-            content = await file.read()
-            email_text = content.decode("utf-8", errors="ignore")
-        elif file.filename.endswith(".pdf"):
-            reader = PyPDF2.PdfReader(file.file)
-            email_text = " ".join([page.extract_text() for page in reader.pages if page.extract_text()])
-        else:
-            return JSONResponse({"error": "Formato não suportado"}, status_code=400)
-    elif text:
-        email_text = text
+class TextInput(BaseModel):
+    text: str
+
+@app.post("/process_email/file")
+async def process_email_file(file: UploadFile = File(...)):
+    if file.filename.endswith(".txt"):
+        content = await file.read()
+        email_text = content.decode("utf-8", errors="ignore")
+    elif file.filename.endswith(".pdf"):
+        reader = PyPDF2.PdfReader(file.file)
+        email_text = " ".join(
+            [page.extract_text() for page in reader.pages if page.extract_text()]
+        )
     else:
-        return JSONResponse({"error": "Nenhum email enviado"}, status_code=400)
+        return JSONResponse({"error": "Formato não suportado"}, status_code=400)
 
     category = classify_email(email_text)
-
     response = suggest_response(email_text, category)
 
-    email_entry = Email(content=email_text, category=category, response=response)
-    db.add(email_entry)
-    db.commit()
-    db.refresh(email_entry)
+    return {"categoria": category, "resposta": response}
 
-    return {
-        "id": email_entry.id,
-        "categoria": category,
-        "resposta": response
-    }
+
+@app.post("/process_email/text")
+async def process_email_text(body: TextInput):
+    email_text = body.text
+    category = classify_email(email_text)
+    response = suggest_response(email_text, category)
+
+    return {"categoria": category, "resposta": response}    
